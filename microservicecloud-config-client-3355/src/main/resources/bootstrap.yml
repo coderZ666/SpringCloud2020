@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    config:
+      name: microservicecloud-config-client #\u9700\u8981\u4ECEgithub\u4E0A\u8BFB\u53D6\u7684\u8D44\u6E90\u540D\u79F0\uFF0C\u6CE8\u610F\u6CA1\u6709yml\u540E\u7F00\u540D
+      profile: dev   #\u672C\u6B21\u8BBF\u95EE\u7684\u914D\u7F6E\u9879
+      label: master
+      uri: http://config-3344.com:3344  #\u672C\u5FAE\u670D\u52A1\u542F\u52A8\u540E\u5148\u53BB\u627E3344\u53F7\u670D\u52A1\uFF0C\u901A\u8FC7SpringCloudConfig\u83B7\u53D6GitHub\u7684\u670D\u52A1\u5730\u5740
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
