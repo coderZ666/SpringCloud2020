@@ -8,42 +8,42 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true # \u5F00\u542F\u4ECE\u6CE8\u518C\u4E2D\u5FC3\u52A8\u6001\u521B\u5EFA\u8DEF\u7531\u7684\u529F\u80FD\uFF0C\u5229\u7528\u5FAE\u670D\u52A1\u540D\u8FDB\u884C\u8DEF\u7531
+          enabled: true # 开启从注册中心动态创建路由的功能，利用微服务名进行路由
       routes:
-        - id: payment_route # \u8DEF\u7531\u7684id,\u6CA1\u6709\u89C4\u5B9A\u89C4\u5219\u4F46\u8981\u6C42\u552F\u4E00,\u5EFA\u8BAE\u914D\u5408\u670D\u52A1\u540D
-          #\u5339\u914D\u540E\u63D0\u4F9B\u670D\u52A1\u7684\u8DEF\u7531\u5730\u5740
+        - id: payment_route # 路由的id,没有规定规则但要求唯一,建议配合服务名
+          #匹配后提供服务的路由地址
           #uri: http://localhost:8001
-          uri: lb://cloud-payment-service #\u670D\u52A1\u96C6\u7FA4\u65F6\u7528\u8D1F\u8F7D\u5747\u8861\u7684\u65B9\u5F0F\u8BBF\u95EE\u670D\u52A1\uFF0C\u8FD9\u91CC\u5199\u96C6\u7FA4\u7684\u670D\u52A1\u540D
+          uri: lb://cloud-payment-service #服务集群时用负载均衡的方式访问服务，这里写集群的服务名
           predicates:
-            - Path=/payment/get/** # \u65AD\u8A00\uFF0C\u8DEF\u5F84\u76F8\u5339\u914D\u7684\u8FDB\u884C\u8DEF\u7531
+            - Path=/payment/get/** # 断言，路径相匹配的进行路由
         - id: payment_route2
-          #\u5339\u914D\u540E\u63D0\u4F9B\u670D\u52A1\u7684\u8DEF\u7531\u5730\u5740
+          #匹配后提供服务的路由地址
           #uri: http://localhost:8001
-          uri: lb://cloud-payment-service #\u670D\u52A1\u96C6\u7FA4\u65F6\u7528\u8D1F\u8F7D\u5747\u8861\u7684\u65B9\u5F0F\u8BBF\u95EE\u670D\u52A1\uFF0C\u8FD9\u91CC\u5199\u96C6\u7FA4\u7684\u670D\u52A1\u540D
+          uri: lb://cloud-payment-service #服务集群时用负载均衡的方式访问服务，这里写集群的服务名
           predicates:
-            - Path=/payment/lb #\u65AD\u8A00,\u8DEF\u5F84\u76F8\u5339\u914D\u7684\u8FDB\u884C\u8DEF\u7531
+            - Path=/payment/lb #断言,路径相匹配的进行路由
             - After=2020-12-14T16:44:14.331+08:00[Asia/Shanghai]
             #- Before=2020-12-14T16:33:14.331+08:00[Asia/Shanghai]
             #- Between=2020-12-14T16:33:14.331+08:00[Asia/Shanghai],2020-12-14T16:33:14.331+08:00[Asia/Shanghai]
-            #- Cookie=username,zwx # \u8868\u793ACookie\u4E2D\u5FC5\u987B\u6709[username\uFF0Czwx]\u952E\u503C\u5BF9\u624D\u53EF\u4EE5\u8DEF\u7531\u8F6C\u53D1\uFF0C\u5176\u4E2Dzwx\u53EF\u4EE5\u662F\u6B63\u5219\u8868\u8FBE\u5F0F\u5339\u914D\u591A\u79CD\u60C5\u51B5
-            #- Header=X-Request-Id, \d+ # \u5982\u679C\u8BF7\u6C42\u5177\u6709\u540D\u4E3AX-Request-Id\u7684\u8BF7\u6C42\u5934\u5176\u503C\u4E0E\d+\u6B63\u5219\u8868\u8FBE\u5F0F\u5339\u914D\uFF08\u6B63\u6574\u6570\uFF09\u624D\u5339\u914D\u8DEF\u7531\u8F6C\u53D1
-            #- Host=**.zwx.com # \u5982\u679C\u8BF7\u6C42\u5177\u6709\u8FD9\u79CD\u8DEF\u7531\u5339\u914DHost\u7528\u7684\u5934\u503C**.zwx.com\u624D\u4F1A\u8DEF\u7531\u8F6C\u53D1
-            #- Method=GET # \u8BF7\u6C42\u65B9\u5F0F\u4E3AGet\u624D\u53EF\u4EE5\u8F6C\u53D1
-            #- Query=green # \u8BF7\u6C42\u5305\u542B\u53C2\u6570green\u624D\u8DEF\u7531\u8F6C\u53D1 ?green=xxx
+            #- Cookie=username,zwx # 表示Cookie中必须有[username，zwx]键值对才可以路由转发，其中zwx可以是正则表达式匹配多种情况
+            #- Header=X-Request-Id, \d+ # 如果请求具有名为X-Request-Id的请求头其值与\d+正则表达式匹配（正整数）才匹配路由转发
+            #- Host=**.zwx.com # 如果请求具有这种路由匹配Host用的头值**.zwx.com才会路由转发
+            #- Method=GET # 请求方式为Get才可以转发
+            #- Query=green # 请求包含参数green才路由转发 ?green=xxx
             #- RemoteAddr=192.168.1.1/24
-            #- Weight=group1, 2 # \u8868\u793A\u6743\u91CD\uFF0C\u5047\u5982\u540C\u4E00\u4E2A\u8BF7\u6C42\u914D\u7F6E\u4E24\u4E2Auri\uFF0Cgroup\u76F8\u540C\u7684\u4E3A\u4E00\u7EC4\u914D\u7F6E\uFF0C\u6570\u5B57\u8868\u793Ax/10\u7684\u8BF7\u6C42\u5728\u8FD9\u4E2Auri\u5904\u7406
+            #- Weight=group1, 2 # 表示权重，假如同一个请求配置两个uri，group相同的为一组配置，数字表示x/10的请求在这个uri处理
 
 eureka:
   instance:
     hostname: cloud-gateway-service
   client:
-    # \u8868\u793A\u662F\u5426\u5C06\u81EA\u5DF1\u6CE8\u518C\u8FDBEurekaServer\u9ED8\u8BA4\u4E3Atrue
+    # 表示是否将自己注册进EurekaServer默认为true
     register-with-eureka: true
-    # \u662F\u5426\u4ECEEurekaServer\u6293\u53D6\u5DF2\u6709\u7684\u6CE8\u518C\u4FE1\u606F\uFF0C\u9ED8\u8BA4\u4E3Atrue\u3002
-    # \u5355\u8282\u70B9\u65E0\u6240\u8C13\uFF0C\u96C6\u7FA4\u5FC5\u987B\u4E3Atrue\u624D\u80FD\u914D\u5408ribbon\u4F7F\u7528\u8D1F\u8F7D\u5747\u8861
+    # 是否从EurekaServer抓取已有的注册信息，默认为true。
+    # 单节点无所谓，集群必须为true才能配合ribbon使用负载均衡
     fetchRegistry: true
     service-url:
-      #\u5355\u673A\u7248
+      #单机版
       #defaultZone: http://localhost:7001/eureka
-      #\u96C6\u7FA4\u7248
+      #集群版
       defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka

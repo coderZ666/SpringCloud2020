@@ -1,0 +1,36 @@
+server:
+  port: 8802
+
+spring:
+  application:
+    name: cloud-stream-comsumer
+  cloud:
+    stream:
+      binders: # \u5728\u6B64\u5904\u914D\u7F6E\u8981\u7ED1\u5B9A\u7684rabbitMQ\u7684\u670D\u52A1\u4FE1\u606F
+        defaultRabbit: # \u8868\u793A\u5B9A\u4E49\u7684\u540D\u79F0\uFF0C\u7528\u4E8Ebinding\u7684\u6574\u5408
+          type: rabbit # \u6D88\u606F\u4E2D\u95F4\u4EF6\u7C7B\u578B
+          environment: # \u8BBE\u7F6ErabbitMQ\u7684\u76F8\u5173\u73AF\u5883\u914D\u7F6E
+            spring:
+              rabbitmq:
+                host: 192.168.0.104
+                port: 5672
+                username: guest
+                password: guest
+      bindings: # \u670D\u52A1\u7684\u6574\u5408\u5904\u7406
+        input: # \u6D88\u8D39\u8005input\uFF0C\u751F\u4EA7\u8005output\uFF0C\u8FD9\u4E2A\u540D\u5B57\u662F\u4E00\u4E2A\u901A\u9053\u7684\u540D\u79F0
+          destination: studyExchange # \u8868\u793A\u8981\u4F7F\u7528\u7684exchange\uFF08\u7C7B\u4F3Ctopic\u540D\u79F0\uFF09\u540D\u79F0\u5B9A\u4E49
+          content-type: application/json # \u8BBE\u7F6E\u6D88\u606F\u7C7B\u578B\uFF0C\u672C\u6B21\u4E3Ajson\uFF0C\u6587\u672C\u5219\u8BBE\u4E3Atext/plain
+          binder: {defaultRabbit} # \u8BBE\u7F6E\u8981\u7ED1\u5B9A\u7684\u6D88\u606F\u670D\u52A1\u7684\u5177\u4F53\u8BBE\u7F6E
+          group: zwxA
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka
+  instance:
+    lease-renewal-interval-in-seconds: 2 # \u8BBE\u7F6E\u5FC3\u8DF3\u7684\u95F4\u9694\u65F6\u95F4\uFF0C\u9ED8\u8BA430
+    lease-expiration-duration-in-seconds: 5 # \u8D85\u8FC75\u79D2\u95F4\u9694\uFF0C\u9ED8\u8BA490
+    instance-id: receive-8802.com # Eureka\u670D\u52A1\u96C6\u7FA4\u5217\u8868\u663E\u793A\u7684\u4E3B\u673A\u540D
+    prefer-ip-address: true # \u8BBF\u95EE\u7684\u8DEF\u5F84\u53D8\u4E3Aip
+
+

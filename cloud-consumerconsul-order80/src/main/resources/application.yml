@@ -5,11 +5,11 @@ spring:
     name: cloud-consumer-order
   cloud:
     consul:
-      # consul\u6CE8\u518C\u4E2D\u5FC3\u5730\u5740
+      # consul注册中心地址
       host: 192.168.0.102
       port: 8500
       discovery:
         #hostname: 127.0.0.1
         service-name: ${spring.application.name}
-        #\u4E0D\u52A0\u8FD9\u4E2A\u4F1A\u6709\u7EA2\u00D7
+        #不加这个会有红×
         prefer-ip-address: true

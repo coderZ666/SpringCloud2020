@@ -1,0 +1,23 @@
+spring:
+  cloud:
+    config:
+      #需要从github上读取的资源名称，注意没有yml后缀名
+      name: microservicecloud-config-client
+      #本次访问的配置项
+      profile: prod
+      label: master
+      #本微服务启动后先去找3344号服务，通过SpringCloudConfig获取GitHub的服务地址
+      uri: http://192.168.0.105:3344
+  # rabbitmq相关配置，15627是界面端口，5672是MQ访问端口
+  rabbitmq:
+    host: 192.168.0.104
+    port: 5672
+    username: guest
+    password: guest
+
+# 暴露bus刷新配置的端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
