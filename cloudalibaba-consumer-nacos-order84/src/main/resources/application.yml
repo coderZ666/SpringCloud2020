@@ -1,0 +1,31 @@
+server:
+  port: 84
+
+spring:
+  application:
+    name: cloudalibaba-consumer-nacos-order84
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.0.104:8848
+    sentinel:
+      transport:
+        dashboard: 192.168.0.104:8080
+        port: 8719
+
+service-url:
+  nacos-user-service: http://cloudalibaba-provider-payment
+service-url-feign:
+  nacos-user-service: cloudalibaba-provider-payment
+
+# 激活Sentinel对Feign的支持
+feign:
+  sentinel:
+    enabled: true
+
+## 设置feign客户端超时时间(OpenFeign默认支持ribbon)
+#ribbon:
+#  # 指的是建立连接所用的时间,适用于网络状态正常的情况下,两端连接所用的时间
+#  ReadTimeout: 5000
+#  # 指的是建立连接后从服务器读取到可用资源所用的时间
+#  ConnectTimeout: 5000
